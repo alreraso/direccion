@@ -76,14 +76,21 @@ recordRoutes.route('/pelias/delete/').delete((req, res) => {
   dbConnect
     .collection('pelias')
     .deleteOne(listingQuery, function (err, _result) {
-      console.log(_result)
-      if (err) {
-        res
-          .status(400)
-          .send(`Error deleting listing with id ${listingQuery.listing_id}!`);
-      } else {
-        console.log('1 document deleted');
-        res.status(200).send(`documento ${listingQuery._id} borrado`);
+      console.log(typeof( _result))
+      console.log(_result.result.n==0)
+      if(_result.result.n==0){
+        res.status(400).send(`Error no se encontro un archivo con id: ${listingQuery._id}`);
+        console.log('entre we')
+      }else{
+        console.log('no entre we')
+        if (err) {
+          res
+            .status(400)
+            .send(`Error deleting listing with id ${listingQuery._id}!`);
+        } else {
+          console.log('1 document deleted');
+          res.status(200).send(`documento ${listingQuery._id} borrado`);
+        }
       }
     });
 });
