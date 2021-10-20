@@ -69,13 +69,14 @@ recordRoutes.route('/pelias/updateLike').post(function (req, res) {
 });
 
 // This section will help you delete a record.
-recordRoutes.route('/pelias/delete/:id').delete((req, res) => {
+recordRoutes.route('/pelias/delete/').delete((req, res) => {
   const dbConnect = dbo.getDb();
   const listingQuery = { _id: ObjectId( req.body.id) };
 
   dbConnect
     .collection('pelias')
     .deleteOne(listingQuery, function (err, _result) {
+      console.log(_result)
       if (err) {
         res
           .status(400)
