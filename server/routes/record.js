@@ -1,5 +1,5 @@
 const express = require('express');
-
+const ObjectId = require('mongodb').ObjectId; 
 
 // recordRoutes is an instance of the express router.
 // We use it to define our routes.
@@ -48,11 +48,10 @@ recordRoutes.route('/pelias/recordSwipe').post(function (req, res) {
 // This section will help you update a record by id.
 recordRoutes.route('/pelias/updateLike').post(function (req, res) {
   const dbConnect = dbo.getDb();
-  const listingQuery = { _id: req.body.id };
+  const listingQuery = { _id: ObjectId( req.body.id) };
+  delete req.body.id;
   const updates = {
-    $inc: {
-      likes: 1,
-    },
+    $set: req.body
   };
 
   dbConnect
@@ -61,9 +60,10 @@ recordRoutes.route('/pelias/updateLike').post(function (req, res) {
       if (err) {
         res
           .status(400)
-          .send(`Error updating likes on listing with id ${listingQuery.id}!`);
+          .send(`Error updating likes on listing with id ${listingQuery._id}!`);
       } else {
         console.log('1 document updated');
+        res.status(200).send(`documento ${listingQuery._id} cambiado`);
       }
     });
 });
@@ -71,7 +71,7 @@ recordRoutes.route('/pelias/updateLike').post(function (req, res) {
 // This section will help you delete a record.
 recordRoutes.route('/pelias/delete/:id').delete((req, res) => {
   const dbConnect = dbo.getDb();
-  const listingQuery = { listing_id: req.body.id };
+  const listingQuery = { _id: ObjectId( req.body.id) };
 
   dbConnect
     .collection('pelias')
@@ -82,6 +82,7 @@ recordRoutes.route('/pelias/delete/:id').delete((req, res) => {
           .send(`Error deleting listing with id ${listingQuery.listing_id}!`);
       } else {
         console.log('1 document deleted');
+        res.status(200).send(`documento ${listingQuery._id} borrado`);
       }
     });
 });
