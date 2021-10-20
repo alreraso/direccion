@@ -22,6 +22,7 @@ recordRoutes.route('/pelias').get(async function (_req, res) {
         res.status(400).send('Error fetching listings!');
       } else {
         res.json(result);
+        
       }
     });
 });
@@ -39,7 +40,7 @@ recordRoutes.route('/pelias/recordSwipe').post(function (req, res) {
         res.status(400).send('Error inserting matches!');
       } else {
         console.log(`Added a new match with id ${result.insertedId}`);
-        res.status(201).send();
+        res.status(201).send(`${result.insertedId}`);
       }
     });
 });
